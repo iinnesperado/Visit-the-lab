@@ -59,10 +59,10 @@ if __name__ == '__main__':
 
     agent = ['Rmax_MB_nav', 'e_greedy_MB', 'e_greedy_MF']
     env = ['gridworld']
-    nb_iters = 10
-    play_params = {'trials': 25000, 'max_step': 20}
+    nb_iters = 8
+    play_params = {'trials': 20000, 'max_step': 20}
     start_seed = 1
-    proc = 5
+    proc = 4
     cond = 'agent'
 
     launch_and_plot(agent,
@@ -77,12 +77,12 @@ if __name__ == '__main__':
     # Social
     # ---------------------------------------------------------------------------- #
     agent = ['Rmax_MB_soc', 'e_greedy_MB', 'e_greedy_MF']
-    agent = ['e_greedy_MF']
+    # agent = ['e_greedy_MF']
     env = ['social_basic']
-    nb_iters = 10
-    play_params = {'trials': 100000, 'max_step': 20}
+    nb_iters = 8
+    play_params = {'trials': 50000, 'max_step': 20}
     start_seed = 2
-    proc = 8
+    proc = 4
     cond = 'agent'
 
     launch_and_plot(agent,
@@ -99,10 +99,10 @@ if __name__ == '__main__':
     agent = ['Rmax_MB_soc', 'e_greedy_MB', 'e_greedy_MF']
     agent = ['e_greedy_MF']
     env = ['go_to_h']
-    nb_iters = 10
+    nb_iters = 8
     play_params = {'trials': 10000, 'max_step': 20}
     start_seed = 3
-    proc = 10
+    proc = 4
     cond = 'agent'
 
     launch_and_plot(agent,
@@ -120,10 +120,10 @@ if __name__ == '__main__':
 
     agent = ['e_greedy_MB']
     env= ['social_basic', 'social_fast', 'social_hard']
-    nb_iters = 10
+    nb_iters = 8
     play_params = {'trials': 25000, 'max_step': 20}
     start_seed = 4
-    proc = 8
+    proc = 4
     cond = 'social'
 
 
@@ -142,10 +142,10 @@ if __name__ == '__main__':
     agent = ['e_greedy_MB']
     env = ['social_basic', 'social_basic_speed_2', 'social_basic_speed_random' 
         'social_basic_speed_3']
-    nb_iters = 10
+    nb_iters = 8
     play_params = {'trials': 25000, 'max_step': 20}
     start_seed = 4
-    proc = 10
+    proc = 4
     cond = 'social'
 
 
@@ -157,4 +157,3 @@ if __name__ == '__main__':
                     proc,
                     cond)
         
-
