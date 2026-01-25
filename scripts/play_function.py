@@ -51,7 +51,10 @@ def play(environment,
             old_state = environment.agent_state
             action = agent.choose_action(old_state)
             reward, new_state, observation = environment.make_step(action)
-            agent.learn(old_state, reward, new_state, action, observation)
+            if isinstance(environment, envs['social_basic']):
+                agent.learn(old_state, reward, new_state, action)
+            else :
+                agent.learn(old_state, reward, new_state, action, observation)
             cumulative_reward += reward
             step += 1
             if visual['render']:

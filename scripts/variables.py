@@ -35,8 +35,8 @@ agents = {'e_greedy_MB': Epsilon_greedy_MB,
           'Rmax_MB_nav': Rmax,
           'Rmax_MB_soc': Rmax,
           'e_greedy_MB_no_explo': Epsilon_greedy_MB,
-          'e_greedy_beliefMB' : Epsilon_BeliefMB,
-          'Rmax_beliefMB' : Rmax_BeliefMB
+          'e_greedy_belief_MB' : Epsilon_BeliefMB,
+          'Rmax_belief_MB' : Rmax_BeliefMB
           }
 
 agent_names = list(agents.keys())
