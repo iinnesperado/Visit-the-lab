@@ -360,7 +360,7 @@ class SocialStructure():
         self.seeing_each_other = self.H_sees_R and self.R_looks_at_H
         self.looking_at_each_other = self.H_looks_at_R and self.R_looks_at_H
 
-
+# ----------------changements fait pour obs latente de interation_state----------------------
 class Lab_env_HRI(SocialStructure):
 
     def __init__(self, 
@@ -375,7 +375,8 @@ class Lab_env_HRI(SocialStructure):
         self.human = human
         self.random_human_pos = random_human_pos
         self.deterministic = deterministic
-        self.cardinalities = np.array([8, 5, 8, 8])
+        # Observations: [human_moved, human_rotated, distance_changed, distance, required_direction, position_angle]
+        self.cardinalities = np.array([2, 2, 2, 5, 8, 8])
 
         self.number_states = np.prod(self.cardinalities)
 
@@ -386,6 +387,11 @@ class Lab_env_HRI(SocialStructure):
         # GENERAL
         self.state_counter = np.zeros(self.number_states)
         self.step = 0
+
+        # Vars track previous state
+        self.prev_human_pos = None
+        self.prev_human_orientation = None
+        self.prev_distance = None
 
         # Setting up a new episode for an episodic task
         self.new_episode()
@@ -410,6 +416,12 @@ class Lab_env_HRI(SocialStructure):
 
         self.update_position()
         self.update_vision()
+
+        # Init prev state
+        self.prev_human_pos = self.human_pos
+        self.prev_human_orientation = self.human_orientation
+        self.prev_distance = self.distance_for_the_robot
+
         self.update_agent_state()
 
     def new_required_direction(self, direction: int):
@@ -438,7 +450,14 @@ class Lab_env_HRI(SocialStructure):
         if self.human_state != 0:
             self.interaction_state = self.human_state + 4
 
-        multiD_agent_state = np.array([self.interaction_state,
+        # Obs changes in human behaviour
+        human_moved = int(self.human_pos != self.prev_human_pos)
+        human_rotated = int(self.human_orientation != self.prev_human_orientation)
+        distance_changed = int(self.distance_for_the_robot != self.prev_distance)
+
+        multiD_agent_state = np.array([human_moved,
+                                       human_rotated,
+                                       distance_changed,
                                        self.distance_for_the_robot,
                                        self.required_direction,
                                        self.position_angle])
@@ -448,6 +467,11 @@ class Lab_env_HRI(SocialStructure):
         self.state_counter[self.agent_state] += 1
 
     def make_step(self, action):
+        # Store previous state before making changes
+        self.prev_human_pos = self.human_pos
+        self.prev_human_orientation = self.human_orientation
+        self.prev_distance = self.distance_for_the_robot
+
         # nav action (change in position and in orientation)
         if action < 24:
 
@@ -508,7 +532,9 @@ class Lab_env_HRI(SocialStructure):
 
         reward = self.get_reward()
 
-        return reward, self.agent_state
+        observation = (self.human_pos, self.human_orientation, self.distance_for_the_robot)
+
+        return reward, self.agent_state, observation
 
     def get_reward(self):
         cond_human_action = self.human_action in self.human_required_actions
@@ -529,7 +555,14 @@ class Lab_env_HRI(SocialStructure):
         if np.random.random() < 1/5 :
             random_direction = np.random.randint(8)
             self.new_required_direction(random_direction)
-            multiD_agent_state = np.array([self.interaction_state,
+
+            human_moved = int(self.human_pos != self.prev_human_pos)
+            human_rotated = int(self.human_orientation != self.prev_human_orientation)
+            distance_changed = int(self.distance_for_the_robot != self.prev_distance)
+
+            multiD_agent_state = np.array([human_moved,
+                                       human_rotated,
+                                       distance_changed,
                                        self.distance_for_the_robot,
                                        self.required_direction,
                                        self.position_angle])

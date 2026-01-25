@@ -1,4 +1,4 @@
-from agents import Epsilon_greedy_MF, Rmax, Epsilon_greedy_MB
+from agents import Epsilon_greedy_MF, Rmax, Epsilon_greedy_MB, Rmax_BeliefMB, Epsilon_BeliefMB
 from envs import Gridworld, Lab_env, Lab_env_HRI, GoToHumanVision, Human
 from envs import Lab_HRI_evaluation, SocialGridworld
 from environment_generation import Lab_structure
@@ -35,6 +35,8 @@ agents = {'e_greedy_MB': Epsilon_greedy_MB,
           'Rmax_MB_nav': Rmax,
           'Rmax_MB_soc': Rmax,
           'e_greedy_MB_no_explo': Epsilon_greedy_MB,
+          'e_greedy_beliefMB' : Epsilon_BeliefMB,
+          'Rmax_beliefMB' : Rmax_BeliefMB
           }
 
 agent_names = list(agents.keys())

@@ -50,8 +50,8 @@ def play(environment,
         while not game_over:
             old_state = environment.agent_state
             action = agent.choose_action(old_state)
-            reward, new_state = environment.make_step(action)
-            agent.learn(old_state, reward, new_state, action)
+            reward, new_state, observation = environment.make_step(action)
+            agent.learn(old_state, reward, new_state, action, observation)
             cumulative_reward += reward
             step += 1
             if visual['render']:

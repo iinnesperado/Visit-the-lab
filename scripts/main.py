@@ -72,88 +72,95 @@ if __name__ == '__main__':
                     start_seed,
                     proc,
                     cond)
+    
+    print('Done Navigation')
 
     # ---------------------------------------------------------------------------- #
     # Social
     # ---------------------------------------------------------------------------- #
-    agent = ['Rmax_MB_soc', 'e_greedy_MB', 'e_greedy_MF']
-    # agent = ['e_greedy_MF']
-    env = ['social_basic']
-    nb_iters = 8
-    play_params = {'trials': 50000, 'max_step': 20}
-    start_seed = 2
-    proc = 4
-    cond = 'agent'
+    # agent = ['Rmax_MB_soc', 'e_greedy_MB', 'e_greedy_MF']
+    # # agent = ['e_greedy_MF']
+    # env = ['social_basic']
+    # nb_iters = 8
+    # play_params = {'trials': 50000, 'max_step': 20}
+    # start_seed = 2
+    # proc = 4
+    # cond = 'agent'
 
-    launch_and_plot(agent,
-                    env,
-                    nb_iters,
-                    play_params,
-                    start_seed,
-                    proc,
-                    cond)
+    # launch_and_plot(agent,
+    #                 env,
+    #                 nb_iters,
+    #                 play_params,
+    #                 start_seed,
+    #                 proc,
+    #                 cond)
+    
+    # print('Done Social Task')
 
     # ---------------------------------------------------------------------------- #
     # Go to Human Vision
     # ---------------------------------------------------------------------------- #
-    agent = ['Rmax_MB_soc', 'e_greedy_MB', 'e_greedy_MF']
-    agent = ['e_greedy_MF']
-    env = ['go_to_h']
-    nb_iters = 8
-    play_params = {'trials': 10000, 'max_step': 20}
-    start_seed = 3
-    proc = 4
-    cond = 'agent'
+    # agent = ['Rmax_MB_soc', 'e_greedy_MB', 'e_greedy_MF']
+    # # agent = ['e_greedy_MF']
+    # env = ['go_to_h']
+    # nb_iters = 8
+    # play_params = {'trials': 10000, 'max_step': 20}
+    # start_seed = 3
+    # proc = 4
+    # cond = 'agent'
 
-    launch_and_plot(agent,
-                    env,
-                    nb_iters,
-                    play_params,
-                    start_seed,
-                    proc,
-                    cond)
+    # launch_and_plot(agent,
+    #                 env,
+    #                 nb_iters,
+    #                 play_params,
+    #                 start_seed,
+    #                 proc,
+    #                 cond)
+    # print('Done Go To Human Vision Task')
+
 
 
     # ---------------------------------------------------------------------------- #
     # Three humans comparison - Social Task
     # ---------------------------------------------------------------------------- #
 
-    agent = ['e_greedy_MB']
-    env= ['social_basic', 'social_fast', 'social_hard']
-    nb_iters = 8
-    play_params = {'trials': 25000, 'max_step': 20}
-    start_seed = 4
-    proc = 4
-    cond = 'social'
+    # agent = ['e_greedy_MB']
+    # env= ['social_basic', 'social_fast', 'social_hard']
+    # nb_iters = 8
+    # play_params = {'trials': 25000, 'max_step': 20}
+    # start_seed = 4
+    # proc = 4
+    # cond = 'social'
 
 
-    launch_and_plot(agent,
-                    env,
-                    nb_iters,
-                    play_params,
-                    start_seed,
-                    proc,
-                    cond)
+    # launch_and_plot(agent,
+    #                 env,
+    #                 nb_iters,
+    #                 play_params,
+    #                 start_seed,
+    #                 proc,
+    #                 cond)
 
-    # ---------------------------------------------------------------------------- #
-    # Three humans comparison 2 - Social Task
-    # ---------------------------------------------------------------------------- #
+    # # ---------------------------------------------------------------------------- #
+    # # Three humans comparison 2 - Social Task
+    # # ---------------------------------------------------------------------------- #
 
-    agent = ['e_greedy_MB']
-    env = ['social_basic', 'social_basic_speed_2', 'social_basic_speed_random' 
-        'social_basic_speed_3']
-    nb_iters = 8
-    play_params = {'trials': 25000, 'max_step': 20}
-    start_seed = 4
-    proc = 4
-    cond = 'social'
+    # agent = ['e_greedy_MB']
+    # env = ['social_basic', 'social_basic_speed_2', 'social_basic_speed_random' 
+    #     'social_basic_speed_3']
+    # nb_iters = 8
+    # play_params = {'trials': 25000, 'max_step': 20}
+    # start_seed = 4
+    # proc = 4
+    # cond = 'social'
 
 
-    launch_and_plot(agent,
-                    env,
-                    nb_iters,
-                    play_params,
-                    start_seed,
-                    proc,
-                    cond)
-        
+    # launch_and_plot(agent,
+    #                 env,
+    #                 nb_iters,
+    #                 play_params,
+    #                 start_seed,
+    #                 proc,
+    #                 cond)
+
+    print('Done.')
