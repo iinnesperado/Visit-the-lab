@@ -9,7 +9,7 @@ from envs import Lab_env_HRI, Human, Lab_HRI_evaluation
 from agents import Epsilon_greedy_MF, Rmax, Epsilon_greedy_MB, MFLearnerOnMB
 from nav_interaction import NavigationInteraction
 from graphics import get_max_Q_values_and_policy, plot_with_std
-from graphics import plot_2D, plot_1D, plot_rewards_agents, basic_plot, plot_vs_Q, plot_vs_distance
+from graphics import plot_2D, plot_1D, basic_plot, plot_vs_Q, plot_vs_distance
 
 # from visualization import save_gif, save_mp4
 
@@ -229,16 +229,18 @@ for i in range(int(navigation_environment.max_label)+1):
 
 # Compare the agents
 
-nb_iters = 0
+nb_iters = 8
 starting_seed = 1
 
-agents = ['Rmax', 'Epsilon_greedy_MB', 'Epsilon_greedy_MF']
+# agents = ['Rmax', 'Epsilon_greedy_MB', 'Epsilon_greedy_MF']
+agents = ['Epsilon_greedy_MB', 'Epsilon_greedy_MF']
 
 # agents = ['VI_softmax']
 agents_with_MF = ['Rmax', 'Epsilon_greedy_MB']
 passive_MF_agent_parameters = {'alpha': 0.5, 'gamma': 0.9}
 # environments = ["navigation", "social"]
 environments = ["navigation"]
+# environments = ["social"]
 
 navigation_environment = Gridworld()
 human = Human(speeds=[0.5, 0.5, 0], failing_rate=0.05, pointing_need=0.5, losing_attention=0.05,
@@ -283,7 +285,7 @@ def play_multiprocess(environment, agent, name_agent, name_environment, trials=1
                     np.save(directory_name+"/MF_qvalues_halfway.npy", agent.Q_MF)
                 end_mid_time = time.time()
             old_state = environment.agent_state
-            action = agent.choose_action()
+            action = agent.choose_action(old_state)
             reward, new_state = environment.make_step(action)
             agent.learn(old_state, reward, new_state, action)
             cumulative_reward += reward
@@ -378,7 +380,7 @@ def main_function(all_seeds, every_simulation, play_params, agent_parameters):
         all_parameters = [[play_params, all_seeds[index_seed], agent_parameters[index_seed],
                            every_simulation[index_seed]] for index_seed in range(len(all_seeds))]
     # pool = Pool(cpu_count()-1)
-    pool = Pool(5)
+    pool = Pool(4)
     results = pool.map(one_parameter_play_function, all_parameters)
     pool.close()
     pool.join()
@@ -390,9 +392,11 @@ def main_function(all_seeds, every_simulation, play_params, agent_parameters):
     print('Computation time: '+str(time_after - before))
     return rewards, times
 
-
-rewards, times = evaluate_agents(environments, agents, nb_iters, play_parameters,
-                                 agent_parameters, starting_seed)
+if __name__ == '__main__':
+    rewards, times = evaluate_agents(environments, agents, nb_iters, play_parameters,
+                                    agent_parameters, starting_seed)
+    np.save('data/MF_tables/rewards_many.npy', rewards)
+    
 
 
 # Compute the values on the new MF agents

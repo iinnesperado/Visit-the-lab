@@ -2,6 +2,8 @@
 __pycache__/
 data/
 all_imgs/
+data_MFMB/
+some\ results/
 *.py[cod]
 *$py.class
 

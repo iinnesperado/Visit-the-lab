@@ -74,6 +74,7 @@ get_MF_performance_with_q_tables(nb_tests, play_parameters)
 
 rewards = np.load('../data/MF_tables/rewards_many.npy',
                   allow_pickle=True).item()
+# rewards = {(str(k[0]), str(k[1]), k[2]): v for k, v in rewards.items()}
 
 rewards = {key: value for key, value in rewards.items()
             if key not in [('social_basic', 'Rmax_MB_soc', i)
@@ -82,6 +83,8 @@ rewards = {key: value for key, value in rewards.items()
 MF_MB_rewards = np.load('../data/MF_tables/reward_MF_on_MB.npy',
                          allow_pickle=True).item()
 # print(MF_MB_rewards.keys())
+# MF_MB_rewards = {(str(k[0]), str(k[1]), k[2]): v for k, v in MF_MB_rewards.items()}
+
 
 MF_MB_rewards = {('social_basic','MF_on_MB', key[2]): value for key, value 
                  in MF_MB_rewards.items() for i in range(10)}
@@ -100,7 +103,10 @@ print(rewards.keys())
 
 all_rewards = np.load('../data/MF_tables/all_rewards_MB_MF.npy',
                       allow_pickle=True).item()
-agent_to_test = ['MF_on_MB', 'e_greedy_MB', 'e_greedy_MF']
+# all_rewards = {(str(k[0]), str(k[1]), k[2]): v for k, v in all_rewards.items()}
+
+# agent_to_test = ['MF_on_MB', 'e_greedy_MB', 'e_greedy_MF']
+agent_to_test = ['MF_on_MB', 'Epsilon_greedy_MB', 'Epsilon_greedy_MF']
 play_parameters = {'trials': 100000, 'max_step': 20}
 environment_to_test = ['social_basic']
 nb_tests = 10
