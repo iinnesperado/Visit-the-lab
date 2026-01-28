@@ -57,23 +57,23 @@ if __name__ == '__main__':
     # Navigation
     # ---------------------------------------------------------------------------- #
 
-    agent = ['Rmax_MB_nav', 'e_greedy_MB', 'e_greedy_MF']
-    env = ['gridworld']
-    nb_iters = 8
-    play_params = {'trials': 20000, 'max_step': 20}
-    start_seed = 1
-    proc = 4
-    cond = 'agent'
+    # agent = ['Rmax_MB_nav', 'e_greedy_MB', 'e_greedy_MF']
+    # env = ['gridworld']
+    # nb_iters = 8
+    # play_params = {'trials': 20000, 'max_step': 20}
+    # start_seed = 1
+    # proc = 4
+    # cond = 'agent'
 
-    launch_and_plot(agent,
-                    env,
-                    nb_iters,
-                    play_params,
-                    start_seed,
-                    proc,
-                    cond)
+    # launch_and_plot(agent,
+    #                 env,
+    #                 nb_iters,
+    #                 play_params,
+    #                 start_seed,
+    #                 proc,
+    #                 cond)
     
-    print('Done Navigation')
+    # print('Done Navigation')
 
     # ---------------------------------------------------------------------------- #
     # Social
@@ -162,5 +162,29 @@ if __name__ == '__main__':
     #                 start_seed,
     #                 proc,
     #                 cond)
+
+    # ---------------------------------------------------------------------------- #
+    # Social with Belief comparison
+    # ---------------------------------------------------------------------------- #
+    # Rmax
+    # agent = ['Rmax_MB_soc', 'Rmax_belief_MB']
+    # # e-greedy
+    # # agent = ['e_greedy_MB','e_greedy_MF', 'e_greedy_belief_MB']
+    # env = ['social_basic']
+    # nb_iters = 8
+    # play_params = {'trials': 50000, 'max_step': 20}
+    # start_seed = 2
+    # proc = 4
+    # cond = 'agent'
+
+    # launch_and_plot(agent,
+    #                 env,
+    #                 nb_iters,
+    #                 play_params,
+    #                 start_seed,
+    #                 proc,
+    #                 cond)
+    
+    # print('Done Social Task')
 
     print('Done.')

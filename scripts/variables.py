@@ -1,5 +1,5 @@
 from agents import Epsilon_greedy_MF, Rmax, Epsilon_greedy_MB, Rmax_BeliefMB, Epsilon_BeliefMB
-from envs import Gridworld, Lab_env, Lab_env_HRI, GoToHumanVision, Human
+from envs import Gridworld, Lab_env, Lab_env_HRI, GoToHumanVision, Human, Lab_env_HRI_LatentObs
 from envs import Lab_HRI_evaluation, SocialGridworld
 from environment_generation import Lab_structure
 import constants as const
@@ -45,7 +45,9 @@ agent_params = {'e_greedy_MB': const.e_greedy_MB_param,
                 'e_greedy_MF': const.e_greedy_MF_param,
                 'Rmax_MB_nav': const.Rmax_MB_nav,
                 'Rmax_MB_soc': const.Rmax_MB_soc,
-                'e_greedy_MB_no_explo': const.e_greedy_MB_no_explo_param
+                'e_greedy_MB_no_explo': const.e_greedy_MB_no_explo_param,
+                'e_greedy_belief_MB': const.e_greedy_belief_MB_param,
+                'Rmax_belief_MB': const.Rmax_belief_MB_param
                 }
 
 # ---------------------------------------------------------------------------- #
@@ -57,6 +59,7 @@ envs = {'gridworld': Gridworld,
         'lab_nav': Lab_env,
         'social_basic': Lab_env_HRI,
         'social_hard': Lab_env_HRI,
+        'social_latent': Lab_env_HRI_LatentObs,
         'social_fast': Lab_env_HRI,
         'social_basic_speed_2': Lab_env_HRI,
         'social_basic_speed_3': Lab_env_HRI,
@@ -73,6 +76,8 @@ env_subparams = {
     'lab_nav': {'structure': {}},
     'social_basic': {'nav_env': {},
                      'human': const.basic_human_param},
+    'social_latent': {'nav_env': {},
+                      'human': const.basic_human_param},
     'social_basic_speed_2': {'nav_env': {},
                              'human': const.basic_human_speed_2_param},
     'social_basic_speed_3': {'nav_env': {},
@@ -96,6 +101,7 @@ env_subclasses = {
     'gridworld': {},
     'lab_nav': {'structure': Lab_structure},
     'social_basic': {'nav_env': SocialGridworld, 'human': Human},
+    'social_latent': {'nav_env': SocialGridworld, 'human': Human},
     'social_hard': {'nav_env': SocialGridworld, 'human': Human},
     'social_fast': {'nav_env': SocialGridworld, 'human': Human},
     'social_basic_speed_2': {'nav_env': SocialGridworld, 'human': Human},

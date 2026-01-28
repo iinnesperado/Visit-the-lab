@@ -47,14 +47,26 @@ def play(environment,
     reward_per_episode = []
     for trial in range(trials):
         cumulative_reward, step, game_over = 0, 0, False
+        environment.new_episode()
+
+        if hasattr(agent, 'reset_belief'):
+            agent.reset_belief()
+        
         while not game_over:
             old_state = environment.agent_state
             action = agent.choose_action(old_state)
-            reward, new_state, observation = environment.make_step(action)
-            if isinstance(environment, envs['social_basic']):
+            # reward, new_state = environment.make_step(action)
+            # agent.learn(old_state, reward, new_state, action)
+            result = environment.make_step(action)
+            if len(result) == 3:  # social task env
+                reward, new_state, observation = result
+                if hasattr(agent, 'update_belief'):
+                    agent.learn(old_state, reward, new_state, action, observation)
+                else:
+                    agent.learn(old_state, reward, new_state, action)
+            else:  # other env
+                reward, new_state = result
                 agent.learn(old_state, reward, new_state, action)
-            else :
-                agent.learn(old_state, reward, new_state, action, observation)
             cumulative_reward += reward
             step += 1
             if visual['render']:

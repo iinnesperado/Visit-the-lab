@@ -360,8 +360,184 @@ class SocialStructure():
         self.seeing_each_other = self.H_sees_R and self.R_looks_at_H
         self.looking_at_each_other = self.H_looks_at_R and self.R_looks_at_H
 
-# ----------------changements fait pour obs latente de interation_state----------------------
 class Lab_env_HRI(SocialStructure):
+
+    def __init__(self, 
+                 nav_env, 
+                 human, 
+                 random_human_pos=False, 
+                 deterministic = True):
+
+        super().__init__(nav_env)
+
+        # INTERACTION
+        self.human = human
+        self.random_human_pos = random_human_pos
+        self.deterministic = deterministic
+        self.cardinalities = np.array([8, 5, 8, 8])
+
+        self.number_states = np.prod(self.cardinalities)
+
+        self.number_actions = 30
+        self.states = np.arange(self.number_states)
+        self.actions = np.arange(self.number_actions)
+
+        # GENERAL
+        self.state_counter = np.zeros(self.number_states)
+        self.step = 0
+
+        # Setting up a new episode for an episodic task
+        self.new_episode()
+
+    def new_episode(self):
+
+        self.human_state = 0
+
+        self.first_orientation = np.random.randint(8)
+        self.first_orientation_human = np.random.randint(8)
+        self.orientation = self.first_orientation
+        self.human_orientation = self.first_orientation_human
+
+        self.pos = np.random.randint(self.number_nav_states)
+        if self.random_human_pos:
+            self.human_pos = np.random.randint(self.number_nav_states)
+        else:
+            self.human_pos = self.height // 2 * self.width + self.width // 2
+
+        random_direction = np.random.randint(8)
+        self.new_required_direction(random_direction)
+
+        self.update_position()
+        self.update_vision()
+        self.update_agent_state()
+
+    def new_required_direction(self, direction: int):
+
+        self.required_direction = direction
+        basic_action = self.direction_to_action[self.required_direction]
+
+        self.human_required_actions = [basic_action,
+                                       basic_action + 4,
+                                       basic_action + 8]
+        
+
+    def update_agent_state(self):
+        if self.looking_at_each_other:
+            self.vision_state = 4
+        elif self.seeing_each_other:
+            self.vision_state = 3
+        elif self.H_looks_at_R:
+            self.vision_state = 2
+        elif self.H_sees_R:
+            self.vision_state = 1
+        else:
+            self.vision_state = 0
+
+        self.interaction_state = self.vision_state
+        if self.human_state != 0:
+            self.interaction_state = self.human_state + 4
+
+        multiD_agent_state = np.array([self.interaction_state,
+                                       self.distance_for_the_robot,
+                                       self.required_direction,
+                                       self.position_angle])
+        self.agent_state = self.multiD_to_1D(self.cardinalities,
+                                             multiD_agent_state)
+
+        self.state_counter[self.agent_state] += 1
+
+    def make_step(self, action):
+        # nav action (change in position and in orientation)
+        if action < 24:
+
+            if self.deterministic :
+                self.pos = self.transitions[self.pos][action]
+            else : 
+                probas = self.transitions[self.pos][action]
+                self.pos = np.random.choice(self.nav_states,
+                                        p=probas)
+                
+            self.orientation = self.action_to_direction[action]
+
+        # Looking at human (change in orientation)
+        if action == 25:
+            self.orientation = self.position_angle
+        # Teleport the robot to the human visual field, with random orientation.
+        # The position is the one reached doing a two step movement from the
+        # human position in the direction vector of the human visual field
+        if action == 29:
+            # Only if the human is not engaged
+            if self.human_state == 0:
+
+                two_step = self.direction_to_action[self.human_orientation] + 4
+
+                if self.deterministic : 
+                    self.pos = self.transitions[self.human_pos][two_step]
+                else : 
+                    probabilities = self.transitions[self.human_pos][two_step]
+                    goal_state = np.random.choice(self.nav_states, p=probabilities)
+
+                    # Teleporting the robot to the desired state
+                    self.pos = goal_state
+                self.orientation = np.random.randint(8)
+
+        self.human_state = self.human.update_state(
+            action,
+            self.H_sees_R,
+            self.H_looks_at_R,
+            self.R_looks_at_H,
+            self.appropriate_distance,
+            self.human_orientation)
+
+        # the human_action is updated depending on the robot action
+        self.human_action = self.human.update_action(self.position_angle,
+                                                     action)
+
+        self.human_orientation = self.human.update_vision(self.position_angle)
+
+
+        if self.deterministic : 
+            self.human_pos = self.transitions[self.human_pos][self.human_action]
+        else : 
+            probas_pos_human = self.transitions[self.human_pos][self.human_action]
+            self.human_pos = np.random.choice(self.nav_states, p=probas_pos_human)
+        self.update_position()
+        self.update_vision()
+        self.update_agent_state()
+
+        reward = self.get_reward()
+
+        return reward, self.agent_state
+
+    def get_reward(self):
+        cond_human_action = self.human_action in self.human_required_actions
+        cond_human_state = self.human_state == 3
+        if cond_human_action and cond_human_state:
+            reward = 1
+            # if np.random.random() < 1/5 :
+            #     random_direction = np.random.randint(8)
+            #     self.new_required_direction(random_direction)
+            #     multiD_agent_state = np.array([self.interaction_state,
+            #                                self.distance_for_the_robot,
+            #                                self.required_direction,
+            #                                self.position_angle])
+            #     self.agent_state = self.multiD_to_1D(self.cardinalities,
+            #                                      multiD_agent_state)
+        else:
+            reward = 0
+        if np.random.random() < 1/5 :
+            random_direction = np.random.randint(8)
+            self.new_required_direction(random_direction)
+            multiD_agent_state = np.array([self.interaction_state,
+                                       self.distance_for_the_robot,
+                                       self.required_direction,
+                                       self.position_angle])
+            self.agent_state = self.multiD_to_1D(self.cardinalities,
+                                             multiD_agent_state)
+        return reward
+
+# ----------------changements fait pour obs latente de interation_state----------------------
+class Lab_env_HRI_LatentObs(SocialStructure):
 
     def __init__(self, 
                  nav_env, 
@@ -399,6 +575,7 @@ class Lab_env_HRI(SocialStructure):
     def new_episode(self):
 
         self.human_state = 0
+        self.human.human_state = 0
 
         self.first_orientation = np.random.randint(8)
         self.first_orientation_human = np.random.randint(8)
@@ -537,6 +714,7 @@ class Lab_env_HRI(SocialStructure):
         return reward, self.agent_state, observation
 
     def get_reward(self):
+        # print('get_reward()')
         cond_human_action = self.human_action in self.human_required_actions
         cond_human_state = self.human_state == 3
         if cond_human_action and cond_human_state:

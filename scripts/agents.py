@@ -85,7 +85,7 @@ class Basic_MB:
         new_reward = self.Rsum[old_state][action] / self.nSA[old_state][action]
         self.R[old_state][action] = new_reward
 
-    def learn(self, old_state, reward, new_state, action):
+    def learn(self, old_state, reward, new_state, action, observation=None):
 
         self.learn_the_model(old_state, reward, new_state, action)
         self.compute_reward_VI(old_state, action)
@@ -222,6 +222,8 @@ class BeliefMB(Basic_MB):
 
     def reset_belief(self):
         self.belief = np.ones(self.num_latent_states)/self.num_latent_states
+        self.prev_observation = None
+        self.prev_latent_estimate = None
     
     def compute_observation_likelihood(self, obs_human_moved, obs_human_rotated,
                                        obs_distance_changed, latent_state):
@@ -257,7 +259,7 @@ class BeliefMB(Basic_MB):
         '''Update latent transition model based on observed state transitions.'''
         self.latent_transition_counts[prev_latent, action, next_latent] += 1
 
-        total_count = np.sum(self.latent_transition_counts[prev_latent, action, next_latent])
+        total_count = np.sum(self.latent_transition_counts[prev_latent, action])
         if total_count > 0:
             self.latent_transition_counts[prev_latent, action] = \
                 self.latent_transition_counts[prev_latent,action] / total_count
@@ -289,7 +291,7 @@ class BeliefMB(Basic_MB):
                     current_state,
                     action
                 )
-                transition_sum += transition_prob * self.belief[current_state]
+                transition_sum += (transition_prob * self.belief[current_state])
 
             new_belief[next_state] = obs_linelihood * transition_sum
 
@@ -304,7 +306,23 @@ class BeliefMB(Basic_MB):
         '''Get the most likely latent state based on current belief.'''
         return np.argmax(self.belief)
     
-    def learn(self, old_state, reward, new_state, action, observation=None):
+    def choose_action(self, state):
+        """Greedy avec bonus exploratoire basé sur l'incertitude du belief."""
+        q_values = self.Q[state].copy()
+        
+        # Mesure d'incertitude
+        entropy = -np.sum(self.belief * np.log(self.belief + 1e-10))
+        uncertainty = entropy / np.log(self.num_latent_states)
+        
+        # Bonus pour actions sociales si incertain
+        if uncertainty > 0.6:
+            social_bonus = 0.15 * uncertainty
+            for action in [25, 26, 27, 28, 29]:  # Actions sociales
+                q_values[action] += social_bonus
+        
+        return np.argmax(q_values)
+    
+    def learn(self, old_state, reward, new_state, action, observation):
         '''Extended learning that includes belief update and latent transition learning.'''
 
         super().learn(old_state, reward, new_state, action)
@@ -324,8 +342,8 @@ class BeliefMB(Basic_MB):
                     new_latent_estimate
                 )
 
-                self.prev_latent_estimate = new_latent_estimate
-                self.prev_observation = observation
+            self.prev_latent_estimate = new_latent_estimate
+            self.prev_observation = observation
 
 class Epsilon_BeliefMB(BeliefMB):
     """

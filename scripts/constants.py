@@ -119,3 +119,16 @@ e_greedy_MB_no_explo_param['epsilon'] = 0
 
 e_greed_MF_no_decision_param = {'gamma': GAMMA,
                                 'alpha': ALPHA}
+
+e_greedy_belief_MB_param = {'gamma': GAMMA,
+                             'epsilon': EPSILON,
+                             'num_latent_states': 8,
+                             'max_iterations': MAX_ITERATIONS,
+                             'step_update': STEP_UPDATE}
+
+Rmax_belief_MB_param = {'gamma': GAMMA,
+                         'Rmax': RMAX,
+                         'm': M_SOC,
+                         'num_latent_states': 8,
+                         'max_iterations': MAX_ITERATIONS,
+                         'step_update': STEP_UPDATE}
