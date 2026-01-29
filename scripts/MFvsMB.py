@@ -249,7 +249,7 @@ social_environment = Lab_env_HRI(SocialGridworld(size=120), human)
 
 environments_name = {"navigation": navigation_environment, "social_basic": social_environment}
 play_parameters = {"navigation": {'trials': 20000, 'nb_steps': 20},
-                   "social_basic": {'trials': 40000, 'nb_steps': 20}}
+                   "social_basic": {'trials': 50000, 'nb_steps': 20}}
 
 agent_names = {'Rmax': Rmax,
                'Epsilon_greedy_MB': Epsilon_greedy_MB,

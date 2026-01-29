@@ -277,7 +277,7 @@ class BeliefMB(Basic_MB):
         new_belief = np.zeros(self.num_latent_states)
 
         for next_state in range(self.num_latent_states):
-            obs_linelihood = self.compute_observation_likelihood(
+            obs_likelihood = self.compute_observation_likelihood(
                 human_moved,
                 human_rotated,
                 distance_changed,
@@ -293,7 +293,7 @@ class BeliefMB(Basic_MB):
                 )
                 transition_sum += (transition_prob * self.belief[current_state])
 
-            new_belief[next_state] = obs_linelihood * transition_sum
+            new_belief[next_state] = obs_likelihood * transition_sum
 
         # Normalize
         belief_sum = np.sum(new_belief)
@@ -319,8 +319,9 @@ class BeliefMB(Basic_MB):
             social_bonus = 0.15 * uncertainty
             for action in [25, 26, 27, 28, 29]:  # Actions sociales
                 q_values[action] += social_bonus
-        
-        return np.argmax(q_values)
+
+        max_indexes = np.flatnonzero(q_values == q_values.max())
+        return np.random.choice(max_indexes)
     
     def learn(self, old_state, reward, new_state, action, observation):
         '''Extended learning that includes belief update and latent transition learning.'''
@@ -366,7 +367,16 @@ class Epsilon_BeliefMB(BeliefMB):
         if np.random.random() > (1 - self.epsilon):
             action = np.random.randint(self.size_actions)
         else:
-            q_values = self.Q[state]
+            q_values = self.Q[state].copy()
+
+            entropy = -np.sum(self.belief * np.log(self.belief + 1e-10))
+            uncertainty = entropy / np.log(self.num_latent_states)
+            
+            if uncertainty > 0.6:
+                social_bonus = 0.15 * uncertainty
+                for action in [25, 26, 27, 28, 29]:  # Actions sociales
+                    q_values[action] += social_bonus
+
             max_indexes = np.flatnonzero(q_values == q_values.max())
             action = np.random.choice(max_indexes)
         return action

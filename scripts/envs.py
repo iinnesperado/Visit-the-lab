@@ -616,7 +616,6 @@ class Lab_env_HRI_LatentObs(SocialStructure):
         self.human_required_actions = [basic_action,
                                        basic_action + 4,
                                        basic_action + 8]
-        
 
     def update_agent_state(self):
         if self.looking_at_each_other:
@@ -630,9 +629,9 @@ class Lab_env_HRI_LatentObs(SocialStructure):
         else:
             self.vision_state = 0
 
-        self.interaction_state = self.vision_state
-        if self.human_state != 0:
-            self.interaction_state = self.human_state + 4
+        # self.interaction_state = self.vision_state
+        # if self.human_state != 0:
+        #     self.interaction_state = self.human_state + 4
 
         # Obs changes in human behaviour
         human_moved = int(self.human_pos != self.prev_human_pos)
@@ -649,6 +648,7 @@ class Lab_env_HRI_LatentObs(SocialStructure):
                                              multiD_agent_state)
 
         self.state_counter[self.agent_state] += 1
+        self.observation =  human_moved, human_rotated, distance_changed
 
     def make_step(self, action):
         # Store previous state before making changes
@@ -716,9 +716,7 @@ class Lab_env_HRI_LatentObs(SocialStructure):
 
         reward = self.get_reward()
 
-        observation = (self.human_pos, self.human_orientation, self.distance_for_the_robot)
-
-        return reward, self.agent_state, observation
+        return reward, self.agent_state, self.observation
 
     def get_reward(self):
         # print('get_reward()')

@@ -95,7 +95,7 @@ def plot_curves(means, stds, all_agent_steps, condition='agent', title=''):
         x_range = [(i+1/2) * all_agent_steps[name_cond] /
                    length_trial for i in range(length_trial)]
         if name_cond == 'MF_on_MB':
-            shift = 25000*20
+            shift = 12500*20
             x_range = np.array(x_range)+shift
             plt.axvline(shift, color=colors[name_cond], linestyle='--')
         yerr0 = means[name_cond] - stds[name_cond]
