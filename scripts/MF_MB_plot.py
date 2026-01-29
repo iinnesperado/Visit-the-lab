@@ -17,7 +17,7 @@ name_human = 'basic_human'
 
 
 play_parameters = {'trials': 25000, 'max_step': 20}
-nb_tests = 10
+nb_tests = 8
 
 def get_q_table_MF(nb_tests, play_params):
     for i in range(nb_tests):
@@ -46,7 +46,7 @@ get_q_table_MF(nb_tests, play_parameters)
 
 
 play_parameters = {'trials': 75000, 'max_step': 20}
-nb_tests = 10
+nb_tests = 8
 
 def get_MF_performance_with_q_tables(nb_tests, play_parameters):
     rewards = {}
@@ -109,7 +109,7 @@ all_rewards = np.load('../data/MF_tables/all_rewards_MB_MF.npy',
 agent_to_test = ['MF_on_MB', 'Epsilon_greedy_MB', 'Epsilon_greedy_MF']
 play_parameters = {'trials': 100000, 'max_step': 20}
 environment_to_test = ['social_basic']
-nb_tests = 10
+nb_tests = 8
 total_steps = {agent_name: play_parameters['trials'] *
                play_parameters['max_step'] for agent_name in agent_to_test}
 

@@ -78,24 +78,24 @@ if __name__ == '__main__':
     # ---------------------------------------------------------------------------- #
     # Social
     # ---------------------------------------------------------------------------- #
-    # agent = ['Rmax_MB_soc', 'e_greedy_MB', 'e_greedy_MF']
-    # # agent = ['e_greedy_MF']
-    # env = ['social_basic']
-    # nb_iters = 8
-    # play_params = {'trials': 50000, 'max_step': 20}
-    # start_seed = 2
-    # proc = 4
-    # cond = 'agent'
+    agent = ['Rmax_MB_soc', 'e_greedy_MB', 'e_greedy_MF']
+    # agent = ['e_greedy_MF']
+    env = ['social_basic']
+    nb_iters = 8
+    play_params = {'trials': 50000, 'max_step': 20}
+    start_seed = 2
+    proc = 4
+    cond = 'agent'
 
-    # launch_and_plot(agent,
-    #                 env,
-    #                 nb_iters,
-    #                 play_params,
-    #                 start_seed,
-    #                 proc,
-    #                 cond)
+    launch_and_plot(agent,
+                    env,
+                    nb_iters,
+                    play_params,
+                    start_seed,
+                    proc,
+                    cond)
     
-    # print('Done Social Task')
+    print('Done Social Task')
 
     # ---------------------------------------------------------------------------- #
     # Go to Human Vision

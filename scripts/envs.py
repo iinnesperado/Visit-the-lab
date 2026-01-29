@@ -316,12 +316,16 @@ class SocialStructure():
 
     def update_position(self):
 
+        # print(f"{self.pos=}")
         self.robot_pos_2D = self.one_to_two_D(self.pos)
         self.human_pos_2D = self.one_to_two_D(self.human_pos)
+        # print(f"{self.robot_pos_2D=}")
+        # print(f"{self.human_pos_2D=}")
 
         # Change of referential : x <- y , y <- - x
         self.relative_pos = (-self.robot_pos_2D[1] + self.human_pos_2D[1],
                              +self.robot_pos_2D[0] - self.human_pos_2D[0])
+        # print(f"{self.relative_pos=}")
 
         # Computing human-robot distance
         dist_vert = abs(self.relative_pos[0])
@@ -447,11 +451,14 @@ class Lab_env_HRI(SocialStructure):
         self.state_counter[self.agent_state] += 1
 
     def make_step(self, action):
+        # print(f"{action=}")
         # nav action (change in position and in orientation)
         if action < 24:
 
             if self.deterministic :
+                # print(f"Lab_env_HRI.make_step() : {self.pos=}")
                 self.pos = self.transitions[self.pos][action]
+                # print(f"after : {self.pos=}")
             else : 
                 probas = self.transitions[self.pos][action]
                 self.pos = np.random.choice(self.nav_states,

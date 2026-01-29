@@ -4,7 +4,7 @@ import os
 import copy
 
 from environment_generation import Lab_structure
-from envs import Lab_env, Gridworld, GoToHumanVision
+from envs import Lab_env, Gridworld, GoToHumanVision, SocialGridworld
 from envs import Lab_env_HRI, Human, Lab_HRI_evaluation
 from agents import Epsilon_greedy_MF, Rmax, Epsilon_greedy_MB, MFLearnerOnMB
 from nav_interaction import NavigationInteraction
@@ -240,16 +240,16 @@ agents_with_MF = ['Rmax', 'Epsilon_greedy_MB']
 passive_MF_agent_parameters = {'alpha': 0.5, 'gamma': 0.9}
 # environments = ["navigation", "social"]
 # environments = ["navigation"]
-environments = ["social"]
+environments = ["social_basic"]
 
 navigation_environment = Gridworld()
 human = Human(speeds=[0.5, 0.5, 0], failing_rate=0.05, pointing_need=0.5, losing_attention=0.05,
               orientation_change_rate=0.2, random_movement=0.1)
-social_environment = Lab_env_HRI(navigation_environment, human)
+social_environment = Lab_env_HRI(SocialGridworld(size=120), human)
 
-environments_name = {"navigation": navigation_environment, "social": social_environment}
+environments_name = {"navigation": navigation_environment, "social_basic": social_environment}
 play_parameters = {"navigation": {'trials': 20000, 'nb_steps': 20},
-                   "social": {'trials': 40000, 'nb_steps': 20}}
+                   "social_basic": {'trials': 40000, 'nb_steps': 20}}
 
 agent_names = {'Rmax': Rmax,
                'Epsilon_greedy_MB': Epsilon_greedy_MB,
@@ -395,7 +395,7 @@ def main_function(all_seeds, every_simulation, play_params, agent_parameters):
 if __name__ == '__main__':
     rewards, times = evaluate_agents(environments, agents, nb_iters, play_parameters,
                                     agent_parameters, starting_seed)
-    np.save('data/MF_tables/rewards_many.npy', rewards)
+    np.save('../data/MF_tables/rewards_many.npy', rewards)
     
 
 

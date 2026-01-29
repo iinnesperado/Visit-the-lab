@@ -67,6 +67,8 @@ def plot_curves(means, stds, all_agent_steps, condition='agent', title=''):
 
     colors = {'e_greedy_MB': 'tab:blue',
               'e_greedy_MF': 'tab:green',
+              'Epsilon_greedy_MB': 'tab:blue',
+              'Epsilon_greedy_MF': 'tab:green',
               'Rmax_MB_nav': 'tab:orange',
               'Rmax_MB_soc': 'tab:orange',
               'MF_on_MB': 'tab:gray',
